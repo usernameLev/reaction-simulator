@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Reaction simulator</title>
+</head>
+
+<body>
+
+  <body>
+    <div id="textSection">
+      <h2>Трактовка результатов</h2>
+      <ul>
+        <li><strong>до 150мс:</strong> Превосходно! Можно садиться за штурвал истребителя или болида формулы 1.</li>
+        <li><strong>от 150 - 170мс:</strong> Это пять с плюсом! Чемпионы мира по пинг-понгу и боксу смотрят на Вас как
+          на конкурента.</li>
+        <li><strong>от 170 - 190мс:</strong> Великолепно! Мастера спорта международного класса одобряют.</li>
+        <li><strong>от 190 - 200мс:</strong> Хорошо! Мастер спорта у Вас в кармане.</li>
+        <li><strong>от 200 - 210мс:</strong> Неплохо. КМС зачтен.</li>
+        <li><strong>от 210 - 230мс:</strong> Нормально. Вы активны, можете лучше.</li>
+        <li><strong>от 230 - 270мс:</strong> Средненько. Скорость реакции, как и у большинства людей.</li>
+        <li><strong>от 270 - 350мс:</strong> Неуд.</li>
+        <li><strong>от 350 - 500мс:</strong> Незачет.</li>
+        <li><strong>от 500 и выше:</strong> Вы вообще живы там? Лучше отдохните, попробуйте завтра.</li>
+      </ul>
+    </div>
+
+    <div id="container">
+      <h1>Тренажер на реакцию!</h1>
+      <div id="box"></div>
+      <button id="startButton">Начать</button>
+      <div id="result">
+        <p id="message">Нажмите на кнопку "Начать", чтобы начать тест!</p>
+        <p id="reactionTime">Ваша реакция: <span id="time">0</span></p>
+      </div>
+    </div>
+    <audio id="sound" src="alle.mp3" preload="auto"></audio>
+
+    <script src="main.js"></script>
+  </body>
+
+</html>
