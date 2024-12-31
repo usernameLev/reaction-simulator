@@ -15,7 +15,7 @@ let isTestCompleted = false;
 const randomDelay = () => Math.floor(Math.random() * 2000) + 1000;
 
 function startReactionTest() {
-  if (isTestCompleted || isFalseStart) return; // Если тест завершен или был фальстарт, не запускаем новый тест
+  if (isTestCompleted || isFalseStart) return;
 
   box.style.backgroundColor = 'grey';
   message.textContent = 'Ждите, когда коробка станет зеленой...';
@@ -29,26 +29,36 @@ function startReactionTest() {
     ) {
       box.style.backgroundColor = 'green';
       startTime = Date.now();
-      sound.play(); // Воспроизводим звук
-      message.textContent = 'Нажмите на коробку!';
+      sound.play();
+      message.textContent = 'Нажмите на коробку или нажмите пробел!';
       reactionStarted = true;
     }
   }, randomDelay());
 }
 
 function handleClick() {
+  processReaction();
+}
+
+function handleKeyPress(event) {
+  if (event.code === 'Space') {
+    processReaction();
+    event.preventDefault(); // Предотвращаем прокрутку страницы при нажатии пробела
+  }
+}
+
+function processReaction() {
   if (isTestCompleted || isTestPaused || isFalseStart) {
-    return; // Если тест завершён, на паузе или был фальстарт, игнорируем клик
+    return;
   }
 
   if (!reactionStarted) {
-    // Если клик был произведён до того, как коробка стала зелёной, это фальстарт
     isFalseStart = true;
-    box.style.backgroundColor = 'red'; // Коробка становится красной при фальстарте
+    box.style.backgroundColor = 'red';
     message.textContent =
       'Фальстарт! Вы нажали слишком рано! Нажмите на кнопку "Начать" для нового теста.';
-    clearTimeout(timeoutId); // Останавливаем таймер
-    endTest(); // Завершаем тест
+    clearTimeout(timeoutId);
+    endTest();
     return;
   }
 
@@ -57,15 +67,15 @@ function handleClick() {
   message.textContent =
     'Тест завершен. Нажмите на кнопку "Начать" для нового теста.';
 
-  isTestCompleted = true; // Устанавливаем флаг завершения теста
-  clearTimeout(timeoutId); // Останавливаем таймер
-  endTest(); // Завершаем тест
+  isTestCompleted = true;
+  clearTimeout(timeoutId);
+  endTest();
 }
 
 function endTest() {
-  box.removeEventListener('click', handleClick); // Убираем обработчик клика
-  // Блокируем дальнейшие клики
-  box.style.pointerEvents = 'none'; // Отключаем взаимодействие с коробкой
+  box.removeEventListener('click', handleClick);
+  window.removeEventListener('keydown', handleKeyPress); // Убираем обработчик нажатия клавиш
+  box.style.pointerEvents = 'none';
 }
 
 function resetTest() {
@@ -73,20 +83,23 @@ function resetTest() {
   isFalseStart = false;
   isTestPaused = false;
   isTestCompleted = false;
-  box.style.backgroundColor = ''; // Сбрасываем цвет коробки
+  box.style.backgroundColor = '';
   reactionTimeText.textContent = '';
-  box.style.pointerEvents = 'auto'; // Включаем взаимодействие с коробкой
+  box.style.pointerEvents = 'auto';
 
-  box.addEventListener('click', handleClick); // Восстанавливаем обработчик клика
+  box.addEventListener('click', handleClick);
 }
 
-// Изменяем обработчик события для кнопки "Начать"
+// Добавляем атрибуты доступности к квадрату
+box.setAttribute('tabindex', '0'); // Позволяет фокусироваться на элементе
+box.setAttribute('role', 'button'); // Указывает, что элемент ведет себя как кнопка
+
 startButton.addEventListener('click', () => {
   if (isTestCompleted || isFalseStart) {
-    resetTest(); // Сброс состояния перед новым запуском
-    setTimeout(startReactionTest, 1000); // Задержка перед новым запуском
+    resetTest();
+    setTimeout(startReactionTest, 1000);
   } else if (reactionStarted || isTestPaused) {
-    pauseTest(); // Приостановка теста, если он запущен (функция pauseTest не определена в вашем коде)
+    pauseTest(); // Функция pauseTest не определена в вашем коде
   }
 });
 
@@ -95,3 +108,9 @@ startButton.addEventListener('click', () => {
   resetTest();
   startReactionTest();
 });
+
+// Добавляем обработчик события для нажатия клавиш
+window.addEventListener('keydown', handleKeyPress);
+
+// Добавляем обработчик события для фокуса на квадрате
+box.addEventListener('keydown', handleKeyPress);
